@@ -1,5 +1,5 @@
 module CHTTPParser {
-    umbrella "/Users/adrian/scale/Packages/CHTTPParser-0.3.0/Sources/CHTTPParser/include"
+    umbrella "/Users/ah/Projects/scale/Packages/CHTTPParser-0.3.0/Sources/CHTTPParser/include"
     link "CHTTPParser"
     export *
 }
