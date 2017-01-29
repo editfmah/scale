@@ -21,11 +21,14 @@ print("Scale v\(version) Started on TCP port \(nodeSettings.queryPort!)")
 // create a router
 let router = Router()
 
+srand48(1024)
+
 // setup a default response for anyone hitting the port
 router.route("/").get("/") {
     (request: RouterRequest, response: RouterResponse, next) in
     
-        response.send("SharkScale Database Engine v\(version)")
+        response.send("SharkScale Database Engine v\(version)\n")
+        response.send("random seed:\(drand48())")
         next()
     
 }
