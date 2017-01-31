@@ -9,6 +9,7 @@
 import Foundation
 import SwiftKuery
 import SwiftKuerySQLite
+import Dispatch
 
 enum ShardType {
     case System
@@ -44,25 +45,63 @@ class Shard {
     private func Open() {
         
         if !isOpen {
+            
+            var isNew = true
+            if FileManager.default.fileExists(atPath: FileShardPath(keyspace: self.keyspace, partition: self.partition)) {
+                isNew = false;
+            }
+            
             shardDB.connect(onCompletion: { (error) in
                 lock.sync {
                     
                     // create the default schema for the partition type
                     switch self.type {
                     case .System:
-                            shardDB.execute(Node.Schemas.System, onCompletion: { (result) in })
+                        shardDB.execute(Node.Schemas.System, onCompletion: {})
+                    case .Partition:
+                        if isNew {
+                            Register()
+                        }
+                        else {
+                            Refactor()
+                        }
                     default:
                         isOpen = true
                     }
                     
-                    
-                    isOpen = true;
+                    isOpen = true
                 }
             })
         }
         
     }
     
+    private func Close() {
+        
+        if isOpen {
+           
+            lock.sync {
+                shardDB.closeConnection()
+                isOpen = false
+            }
+            
+        }
+        
+    }
+    
+    private func Register() {
+        
+        // registers this shard with the node, and applies the current schema
+        
+        
+        // now Refactor the shard
+        Refactor()
+    }
+    
+    private func Refactor() {
+        // queries the system shard to get and schema changes
+        
+    }
     
     
 }

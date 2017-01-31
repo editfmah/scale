@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E0FFFE121E401EB80070F238 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFFE101E401E6C0070F238 /* Globals.swift */; };
+		E0FFFE151E40836D0070F238 /* SystemKeyspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFFE141E40836D0070F238 /* SystemKeyspace.swift */; };
+		E0FFFE171E4087370070F238 /* SQL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFFE161E4087370070F238 /* SQL.swift */; };
 		OBJ_247 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Logger.swift */; };
 		OBJ_254 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Socket.swift */; };
 		OBJ_255 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* SocketProtocols.swift */; };
@@ -422,6 +424,8 @@
 
 /* Begin PBXFileReference section */
 		E0FFFE101E401E6C0070F238 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
+		E0FFFE141E40836D0070F238 /* SystemKeyspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemKeyspace.swift; sourceTree = "<group>"; };
+		E0FFFE161E4087370070F238 /* SQL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQL.swift; sourceTree = "<group>"; };
 		OBJ_100 /* FileServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileServer.swift; sourceTree = "<group>"; };
 		OBJ_101 /* ResourcePathHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcePathHandler.swift; sourceTree = "<group>"; };
 		OBJ_102 /* ResponseHeadersSetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseHeadersSetter.swift; sourceTree = "<group>"; };
@@ -755,6 +759,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E0FFFE131E4083430070F238 /* Tables */ = {
+			isa = PBXGroup;
+			children = (
+				E0FFFE141E40836D0070F238 /* SystemKeyspace.swift */,
+				E0FFFE161E4087370070F238 /* SQL.swift */,
+			);
+			name = Tables;
+			sourceTree = "<group>";
+		};
 		OBJ_10 /* Socket */ = {
 			isa = PBXGroup;
 			children = (
@@ -963,6 +976,7 @@
 		OBJ_212 /* scale */ = {
 			isa = PBXGroup;
 			children = (
+				E0FFFE131E4083430070F238 /* Tables */,
 				OBJ_213 /* BaseRequest.swift */,
 				OBJ_214 /* Extensions.swift */,
 				OBJ_215 /* FileHelpers.swift */,
@@ -1773,7 +1787,9 @@
 				OBJ_533 /* main.swift in Sources */,
 				OBJ_534 /* PersistHandler.swift in Sources */,
 				OBJ_535 /* QueryHandler.swift in Sources */,
+				E0FFFE171E4087370070F238 /* SQL.swift in Sources */,
 				E0FFFE121E401EB80070F238 /* Globals.swift in Sources */,
+				E0FFFE151E40836D0070F238 /* SystemKeyspace.swift in Sources */,
 				OBJ_536 /* Record.swift in Sources */,
 				OBJ_537 /* RequestCoordinator.swift in Sources */,
 				OBJ_538 /* SchemaHandler.swift in Sources */,
