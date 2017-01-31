@@ -18,6 +18,7 @@ class Settings {
     var peerName: String?
     var peerURL: String?
     var queryPort: Int?
+    var dataPath: String?
     
     init(path: String) {
         
@@ -36,7 +37,7 @@ class Settings {
             values.dictionaryObject = ["node_id" : UUID.init().uuidString.lowercased()]
             values["peer_name"] = JSON(NSNull())
             values["peer_url"] = JSON(NSNull())
-            values["query_port"] = JSON(8080)
+            values["query_port"] = JSON(80)
             writeSettings()
         }
     }

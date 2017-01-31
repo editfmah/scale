@@ -51,12 +51,8 @@ router.route("/").post {
     next()
 }
 
-// test sqlite is working on linux 
-
-let db = SQLiteConnection(filename: "myDB.db")
-db.connect { (error) in
-   print("opened db")
-}
+// create the "system" shard/database
+let System = Shard(type: .System, keyspace: Node.Identifiers.SystemShardKeyspace, partition: Node.Identifiers.SystemShardParition)
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: nodeSettings.queryPort!, with: router)
