@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum SQLColumnType {
+enum SQLDataType {
     case String
     case Number
     case Integer
@@ -37,6 +37,30 @@ class SQL {
     
 }
 
+class SQLParam {
+    
+    var floatValue: Float?
+    var intValue: Int?
+    var stringValue: String?
+    var type: SQLDataType
+    
+    init(value: Float) {
+        type = .Number
+        floatValue = value
+    }
+    
+    init(value: Int) {
+        type = .Integer
+        intValue = value
+    }
+    
+    init(value: String) {
+        type = .String
+        stringValue = value
+    }
+    
+}
+
 class SQLAction {
     
     var builtStatement: String
@@ -47,7 +71,7 @@ class SQLAction {
         builtStatement = "CREATE TABLE IF NOT EXISTS \(createTable) (_Id_ TEXT PRIMARY KEY, _timestamp_ TEXT); "
     }
     
-    init(addColumn: String, type: SQLColumnType, table: String) {
+    init(addColumn: String, type: SQLDataType, table: String) {
         
         self.actionType = .AddColumn
         

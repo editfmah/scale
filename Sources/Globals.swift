@@ -8,6 +8,16 @@
 
 import Foundation
 
+public struct SystemTables {
+    
+    let Keyspace: TableKeyspace = TableKeyspace()
+    let KeyspaceSchema: TableKeyspaceSchema = TableKeyspaceSchema()
+    let Shard: TableShard = TableShard()
+    let ShardLocation: TableShardLocation = TableShardLocation()
+    let Node: TableNode = TableNode()
+    
+}
+
 public struct DefaultSchemas {
     
     let System: [SQLAction] = [
@@ -61,3 +71,4 @@ public struct DefaultNodeDescriptions {
 }
 
 let Node: DefaultNodeDescriptions = DefaultNodeDescriptions()
+let Tables: SystemTables = SystemTables()

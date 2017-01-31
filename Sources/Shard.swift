@@ -81,6 +81,7 @@ class Shard {
         if isOpen {
            
             lock.sync {
+                
                 shardDB.closeConnection()
                 isOpen = false
             }
