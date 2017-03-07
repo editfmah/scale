@@ -11,8 +11,8 @@ import SWSQLite
 
 class DataObject : NSObject {
     
-    dynamic var _id_: String
-    dynamic var _timestamp_: String
+    var _id_: String
+    var _timestamp_: String
     
     override init() {
         self._id_ = uuid()
@@ -91,12 +91,6 @@ class DataObject : NSObject {
         let statement = "DELETE FROM \(Mirror(reflecting: self).subjectType) WHERE _id_ = ?;"
         
         var parameters: [Any] = []
-        
-        let id = object_getIvar(object, Ivar("_id_"))
-        if id != nil {
-            parameters.append(id!)
-        }
-        
         
         return SWSQLAction(stmt: statement, params: parameters, operation: .Delete)
     }
