@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import KituraNet
-import Kitura
-import SwiftyJSON
-
-class RequestCoordinator {
-    
-    
-    
-}
+//import KituraNet
+//import Kitura
+//import SwiftyJSON
+//
+//class RequestCoordinator {
+//    
+//    
+//    
+//}

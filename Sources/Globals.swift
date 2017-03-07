@@ -7,56 +7,30 @@
 //
 
 import Foundation
-
-public struct SystemTables {
-    
-    let Keyspace: TableKeyspace = TableKeyspace()
-    let KeyspaceSchema: TableKeyspaceSchema = TableKeyspaceSchema()
-    let Shard: TableShard = TableShard()
-    let ShardLocation: TableShardLocation = TableShardLocation()
-    let Node: TableNode = TableNode()
-    
-}
+import SWSQLite
 
 public struct DefaultSchemas {
     
-    let System: [SQLAction] = [
-    
-        SQLAction(createTable: "Keyspace"),
-        SQLAction(addColumn: "name", type: .String, table: "Keyspace"),
-        SQLAction(addColumn: "replication", type: .Integer, table: "Keyspace"),
-        SQLAction(addColumn: "size", type: .Integer, table: "Keyspace"),
+    let System: [Action] = [
         
-        SQLAction(createTable: "KeyspaceSchema"),
-        SQLAction(addColumn: "keyspace_id", type: .String, table: "KeyspaceSchema"),
-        SQLAction(addColumn: "change", type: .String, table: "KeyspaceSchema"),
+        Action(createTable: "ShardLocation"),
+        Action(addColumn: "shardId", type: .String, table: "ShardLocation"),
+        Action(addColumn: "node", type: .String, table: "ShardLocation"),
+        Action(addColumn: "available", type: .Numeric, table: "ShardLocation"),
         
-        SQLAction(createTable: "Shard"),
-        SQLAction(addColumn: "keyspace_id", type: .String, table: "Shard"),
-        SQLAction(addColumn: "keyspace_name", type: .String, table: "Shard"),
-        SQLAction(addColumn: "partition", type: .String, table: "Shard"),
-        SQLAction(addColumn: "replicas", type: .Integer, table: "Shard"),
-        
-        SQLAction(createTable: "ShardLocation"),
-        SQLAction(addColumn: "shard_id", type: .String, table: "ShardLocation"),
-        SQLAction(addColumn: "node", type: .String, table: "ShardLocation"),
-        SQLAction(addColumn: "available", type: .Integer, table: "ShardLocation"),
-        
-        SQLAction(createTable: "Node"),
-        SQLAction(addColumn: "location_id", type: .String, table: "Node"),
-        SQLAction(addColumn: "group", type: .String, table: "Node"),
-        SQLAction(addColumn: "available", type: .Integer, table: "Node"),
-        SQLAction(addColumn: "last_seen", type: .Integer, table: "Node"),
-        SQLAction(addColumn: "internal_address", type: .String, table: "Node"),
-        SQLAction(addColumn: "internal_port", type: .Integer, table: "Node"),
-        SQLAction(addColumn: "external_address", type: .String, table: "Node"),
-        SQLAction(addColumn: "external_port", type: .Integer, table: "Node"),
-        SQLAction(addColumn: "space_used", type: .Integer, table: "Node"),
-        SQLAction(addColumn: "space_free", type: .Integer, table: "Node")
+        Action(createTable: "Node"),
+        Action(addColumn: "locationId", type: .String, table: "Node"),
+        Action(addColumn: "nodegroup", type: .String, table: "Node"),
+        Action(addColumn: "available", type: .Numeric, table: "Node"),
+        Action(addColumn: "last_seen", type: .Numeric, table: "Node"),
+        Action(addColumn: "internalAddress", type: .String, table: "Node"),
+        Action(addColumn: "internalPort", type: .Numeric, table: "Node"),
+        Action(addColumn: "externalAddress", type: .String, table: "Node"),
+        Action(addColumn: "externalPort", type: .Numeric, table: "Node"),
+        Action(addColumn: "spaceUsed", type: .Numeric, table: "Node"),
+        Action(addColumn: "spaceFree", type: .Numeric, table: "Node"),
         
     ]
-    
-    let Partition: String = ""
     
 }
 
@@ -66,9 +40,8 @@ public struct DefaultIdentifiers {
 }
 
 public struct DefaultNodeDescriptions {
-    let Schemas: DefaultSchemas = DefaultSchemas()
     let Identifiers: DefaultIdentifiers = DefaultIdentifiers()
 }
 
 let Node: DefaultNodeDescriptions = DefaultNodeDescriptions()
-let Tables: SystemTables = SystemTables()
+
