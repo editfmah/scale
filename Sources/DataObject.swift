@@ -9,12 +9,16 @@
 import Foundation
 import SWSQLite
 
-class DataObject : NSObject {
+protocol DataObjectProtocol {
+    func populateFromRecord(_ record: Record)
+}
+
+class DataObject {
     
     var _id_: String
     var _timestamp_: String
     
-    override init() {
+    init() {
         self._id_ = uuid()
         self._timestamp_ = timeuuid()
     }
@@ -23,16 +27,13 @@ class DataObject : NSObject {
         
         self._id_ = uuid()
         self._timestamp_ = timeuuid()
+
+        populateFromRecord(values)
         
-        super.init()
-        
-        // now sping through the ivars, looking for field matches from the record object
-        for field in values.keys {
-            let value = values[field]
-            print("\(field)")
-            self.setValue(value?.asAny(), forKey: field)
-        }
-        
+    }
+    
+    func populateFromRecord(_ record: Record) {
+        fatalError("'populateFromRecord' must be implemented in the SubClass")
     }
     
     func unwrap(_ any:Any) -> Any {
@@ -90,7 +91,7 @@ class DataObject : NSObject {
         
         let statement = "DELETE FROM \(Mirror(reflecting: self).subjectType) WHERE _id_ = ?;"
         
-        var parameters: [Any] = []
+        let parameters: [Any] = [self._id_]
         
         return SWSQLAction(stmt: statement, params: parameters, operation: .Delete)
     }

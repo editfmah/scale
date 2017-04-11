@@ -15,13 +15,13 @@ enum ShardType {
     case Partition
 }
 
-class Shard : DataObject {
+class Shard : DataObject, DataObjectProtocol {
     
     var type: ShardType!
     var keyspace: String?
     var partition: String?
-    var replicas: NSNumber?
-    var hasBeenRefactored: Bool!
+    var replicas: Int?
+    var hasBeenRefactored: Bool = false
     var lastTouched: Date = Date()
     var referenceCount: Int = 0
     var db: SWSQLite!
@@ -39,9 +39,14 @@ class Shard : DataObject {
         
         FileShardDirectoryCreate()
         db = SWSQLite(path: FileShardPath(keyspace: self.keyspace!, partition: self.partition!))
-        
         Open()
         
+    }
+    
+    override func populateFromRecord(_ record: Record) {
+        self.keyspace = record["keyspace"]?.asString()
+        self.partition = record["partition"]?.asString()
+        self.replicas = record["replicas"]?.asInt()
     }
     
     override public func ExcludeProperties() -> [String] {

@@ -9,7 +9,7 @@
 import Foundation
 import SWSQLite
 
-class _shard_: DataObject {
+class _shard_: DataObject, DataObjectProtocol {
     
     var version: String?
     var keyspace: String?

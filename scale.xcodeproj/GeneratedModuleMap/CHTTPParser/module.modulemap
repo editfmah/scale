@@ -1,0 +1,4 @@
+module CHTTPParser {
+    umbrella "/Users/ah/Projects/scale/.build/checkouts/CHTTPParser.git-4187859997338157208/Sources/CHTTPParser/include"
+    export *
+}

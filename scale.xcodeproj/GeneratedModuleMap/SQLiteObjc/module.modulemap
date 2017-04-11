@@ -1,5 +1,0 @@
-module SQLiteObjc {
-    umbrella "/Users/adrian/scale/Packages/SQLite-0.0.1/Sources/SQLiteObjc/include"
-    link "SQLiteObjc"
-    export *
-}
