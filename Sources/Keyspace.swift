@@ -9,47 +9,26 @@
 import Foundation
 import SWSQLite
 
-class KeyspaceSchema : DataObject, DataObjectProtocol {
-    
-    var keyspace: String?
-    var version: String?
-    var change: String?
-    
-    override func populateFromRecord(_ record: Record) {
-        self.keyspace = record["keyspace"]?.asString()
-        self.version = record["version"]?.asString()
-        self.change = record["change"]?.asString()
-    }
-    
-    override class func GetTables() -> [Action] {
-        return [ Action(createTable: "KeyspaceSchema"),
-                 Action(addColumn: "keyspace", type: .String, table: "KeyspaceSchema"),
-                 Action(addColumn: "version", type: .String, table: "KeyspaceSchema"),
-                 Action(addColumn: "change", type: .String, table: "KeyspaceSchema") ]
-    }
-    
-    class func ToCollection(_ records: [Record]) -> [KeyspaceSchema] {
-        var results: [KeyspaceSchema] = []
-        for record in records {
-            results.append(KeyspaceSchema(record))
-        }
-        return results
-    }
-    
-}
-
 class Keyspace : DataObject {
     
     // object vars
     var name: String?
     var replication: NSNumber?
     var size: NSNumber?
+    var template: String?
     
-    convenience init(_name: String, _replication: Int, _size: Int) {
+    convenience init(_name: String, _replication: Int, _size: Int, _template: String?) {
         self.init()
         self.name = _name
         self.replication = NSNumber(value: _replication)
         self.size = NSNumber(value: _size)
+    }
+    
+    override func populateFromRecord(_ record: Record) {
+        self.name = record["name"]?.asString()
+        self.template = record["template"]?.asString()
+        self.replication = record["replication"]?.asNumber()
+        self.size = record["size"]?.asNumber()
     }
     
     override class func GetTables() -> [Action] {
@@ -57,7 +36,8 @@ class Keyspace : DataObject {
             Action(createTable: "Keyspace"),
             Action(addColumn: "name", type: .String, table: "Keyspace"),
             Action(addColumn: "replication", type: .Numeric, table: "Keyspace"),
-            Action(addColumn: "size", type: .Numeric, table: "Keyspace")
+            Action(addColumn: "size", type: .Numeric, table: "Keyspace"),
+            Action(addColumn: "template", type: .Numeric, table: "Keyspace")
         ]
         
         actions.append(contentsOf: KeyspaceSchema.GetTables())
@@ -66,7 +46,7 @@ class Keyspace : DataObject {
     }
     
     // data manipulation and creation functions
-    class func CreateKeyspace(keyspace: String, replication: Int) -> String {
+    class func Create(_ keyspace: String, replication: Int, template: String?) -> String {
         let sys = Shards.systemShard()
         var sysKeyspaces: [Keyspace] = []
         for record in sys.read(sql: "SELECT * FROM Keyspace WHERE name = ? LIMIT 1", params: [keyspace]) {
@@ -80,19 +60,42 @@ class Keyspace : DataObject {
             newKeyspace.name = keyspace
             newKeyspace.replication = NSNumber(value: replication)
             newKeyspace.size = 0
+            newKeyspace.template = template
             sys.write(newKeyspace.Commit())
         } else {
             
             let record = sysKeyspaces[0]
             keyspaceId = record._id_
-        
             let rep = record.replication
             if rep?.intValue != replication {
                 record.replication = NSNumber(value: replication)
                 sys.write(record.Commit())
             }
+            
         }
         return keyspaceId!
+    }
+    
+    class func Exists(_ keyspace: String) -> Bool {
+        let sys = Shards.systemShard()
+        let count = sys.read(sql: "SELECT NULL FROM Keyspace WHERE name = ?", params: [keyspace])
+        if count.count > 0 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    class func Get(_ keyspace: String) -> Keyspace? {
+        let sys = Shards.systemShard()
+        let k = sys.read(sql: "SELECT * FROM Keyspace WHERE name = ?", params: [keyspace])
+        if k.count > 0 {
+            for record in k {
+                let key = Keyspace(record)
+                return key
+            }
+        }
+        return nil
     }
     
 }

@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E092FFAA1EB6716000EC5C32 /* ShardWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = E092FFA91EB6716000EC5C32 /* ShardWrite.swift */; };
+		E092FFAC1EB6A0F300EC5C32 /* KeyspaceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = E092FFAB1EB6A0F300EC5C32 /* KeyspaceQuery.swift */; };
+		E0C1A43D1EA503850040A572 /* KeyspaceCreate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1A43C1EA503850040A572 /* KeyspaceCreate.swift */; };
+		E0C1A43F1EA506110040A572 /* ShardRead.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1A43E1EA506110040A572 /* ShardRead.swift */; };
+		E0C1A4411EA506890040A572 /* KeyspaceModify.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1A4401EA506890040A572 /* KeyspaceModify.swift */; };
+		E0C1A4431EA506A20040A572 /* KeyspaceDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1A4421EA506A20040A572 /* KeyspaceDrop.swift */; };
+		E0C1A4451EA5100A0040A572 /* KeyspaceSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1A4441EA5100A0040A572 /* KeyspaceSchema.swift */; };
+		E0F074F41EB4DFDB0093ABE7 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F074F31EB4DFDB0093ABE7 /* Payload.swift */; };
 		OBJ_218 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_200 /* Logger.swift */; };
 		OBJ_225 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_195 /* Socket.swift */; };
 		OBJ_226 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_196 /* SocketProtocols.swift */; };
@@ -170,11 +178,10 @@
 		OBJ_451 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* main.swift */; };
 		OBJ_452 /* Mutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Mutex.swift */; };
 		OBJ_453 /* PersistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* PersistHandler.swift */; };
-		OBJ_454 /* QueryHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* QueryHandler.swift */; };
+		OBJ_454 /* ShardHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* ShardHandler.swift */; };
 		OBJ_455 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* Record.swift */; };
 		OBJ_456 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* Request.swift */; };
 		OBJ_457 /* RequestCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* RequestCoordinator.swift */; };
-		OBJ_458 /* SchemaHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* SchemaHandler.swift */; };
 		OBJ_459 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Settings.swift */; };
 		OBJ_460 /* Shard.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* Shard.swift */; };
 		OBJ_461 /* ShardCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* ShardCoordinator.swift */; };
@@ -349,6 +356,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E092FFA91EB6716000EC5C32 /* ShardWrite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShardWrite.swift; sourceTree = "<group>"; };
+		E092FFAB1EB6A0F300EC5C32 /* KeyspaceQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyspaceQuery.swift; sourceTree = "<group>"; };
+		E0C1A43C1EA503850040A572 /* KeyspaceCreate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyspaceCreate.swift; sourceTree = "<group>"; };
+		E0C1A43E1EA506110040A572 /* ShardRead.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShardRead.swift; sourceTree = "<group>"; };
+		E0C1A4401EA506890040A572 /* KeyspaceModify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyspaceModify.swift; sourceTree = "<group>"; };
+		E0C1A4421EA506A20040A572 /* KeyspaceDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyspaceDrop.swift; sourceTree = "<group>"; };
+		E0C1A4441EA5100A0040A572 /* KeyspaceSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyspaceSchema.swift; sourceTree = "<group>"; };
+		E0F074F31EB4DFDB0093ABE7 /* Payload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
 		OBJ_10 /* FileHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelpers.swift; sourceTree = "<group>"; };
 		OBJ_101 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		OBJ_102 /* FileResourceServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileResourceServer.swift; sourceTree = "<group>"; };
@@ -425,7 +440,7 @@
 		OBJ_176 /* HTTPServerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPServerRequest.swift; sourceTree = "<group>"; };
 		OBJ_177 /* HTTPServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPServerResponse.swift; sourceTree = "<group>"; };
 		OBJ_178 /* IncomingHTTPSocketProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomingHTTPSocketProcessor.swift; sourceTree = "<group>"; };
-		OBJ_18 /* QueryHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryHandler.swift; sourceTree = "<group>"; };
+		OBJ_18 /* ShardHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShardHandler.swift; sourceTree = "<group>"; };
 		OBJ_180 /* HTTPParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPParser.swift; sourceTree = "<group>"; };
 		OBJ_181 /* HTTPParserStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPParserStatus.swift; sourceTree = "<group>"; };
 		OBJ_182 /* URLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLParser.swift; sourceTree = "<group>"; };
@@ -453,7 +468,6 @@
 		OBJ_210 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CryptoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_211 /* SWSQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SWSQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_212 /* scale */ = {isa = PBXFileReference; lastKnownFileType = text; path = scale; sourceTree = BUILT_PRODUCTS_DIR; };
-		OBJ_22 /* SchemaHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaHandler.swift; sourceTree = "<group>"; };
 		OBJ_23 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		OBJ_24 /* Shard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shard.swift; sourceTree = "<group>"; };
 		OBJ_25 /* ShardCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShardCoordinator.swift; sourceTree = "<group>"; };
@@ -990,7 +1004,7 @@
 			path = ".build/checkouts/CryptoSwift.git--6440749087414195235/Sources/CryptoSwift";
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -999,7 +1013,6 @@
 				OBJ_28 /* Dependencies */,
 				OBJ_201 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -1011,15 +1024,22 @@
 				OBJ_11 /* Globals.swift */,
 				OBJ_12 /* InfoHandler.swift */,
 				OBJ_13 /* Keyspace.swift */,
+				E0C1A43C1EA503850040A572 /* KeyspaceCreate.swift */,
+				E0C1A4421EA506A20040A572 /* KeyspaceDrop.swift */,
 				OBJ_14 /* KeyspaceHandler.swift */,
+				E0C1A4401EA506890040A572 /* KeyspaceModify.swift */,
+				E092FFAB1EB6A0F300EC5C32 /* KeyspaceQuery.swift */,
+				E0C1A43E1EA506110040A572 /* ShardRead.swift */,
+				E0C1A4441EA5100A0040A572 /* KeyspaceSchema.swift */,
+				E092FFA91EB6716000EC5C32 /* ShardWrite.swift */,
 				OBJ_15 /* main.swift */,
 				OBJ_16 /* Mutex.swift */,
+				E0F074F31EB4DFDB0093ABE7 /* Payload.swift */,
 				OBJ_17 /* PersistHandler.swift */,
-				OBJ_18 /* QueryHandler.swift */,
+				OBJ_18 /* ShardHandler.swift */,
 				OBJ_19 /* Record.swift */,
 				OBJ_20 /* Request.swift */,
 				OBJ_21 /* RequestCoordinator.swift */,
-				OBJ_22 /* SchemaHandler.swift */,
 				OBJ_23 /* Settings.swift */,
 				OBJ_24 /* Shard.swift */,
 				OBJ_25 /* ShardCoordinator.swift */,
@@ -1296,7 +1316,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_201 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1544,9 +1564,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				E092FFAA1EB6716000EC5C32 /* ShardWrite.swift in Sources */,
+				E0C1A4451EA5100A0040A572 /* KeyspaceSchema.swift in Sources */,
 				OBJ_444 /* BaseRequest.swift in Sources */,
 				OBJ_445 /* DataObject.swift in Sources */,
 				OBJ_446 /* FileHelpers.swift in Sources */,
+				E092FFAC1EB6A0F300EC5C32 /* KeyspaceQuery.swift in Sources */,
+				E0C1A4411EA506890040A572 /* KeyspaceModify.swift in Sources */,
+				E0C1A43D1EA503850040A572 /* KeyspaceCreate.swift in Sources */,
+				E0C1A4431EA506A20040A572 /* KeyspaceDrop.swift in Sources */,
 				OBJ_447 /* Globals.swift in Sources */,
 				OBJ_448 /* InfoHandler.swift in Sources */,
 				OBJ_449 /* Keyspace.swift in Sources */,
@@ -1554,13 +1580,14 @@
 				OBJ_451 /* main.swift in Sources */,
 				OBJ_452 /* Mutex.swift in Sources */,
 				OBJ_453 /* PersistHandler.swift in Sources */,
-				OBJ_454 /* QueryHandler.swift in Sources */,
+				OBJ_454 /* ShardHandler.swift in Sources */,
 				OBJ_455 /* Record.swift in Sources */,
 				OBJ_456 /* Request.swift in Sources */,
 				OBJ_457 /* RequestCoordinator.swift in Sources */,
-				OBJ_458 /* SchemaHandler.swift in Sources */,
+				E0F074F41EB4DFDB0093ABE7 /* Payload.swift in Sources */,
 				OBJ_459 /* Settings.swift in Sources */,
 				OBJ_460 /* Shard.swift in Sources */,
+				E0C1A43F1EA506110040A572 /* ShardRead.swift in Sources */,
 				OBJ_461 /* ShardCoordinator.swift in Sources */,
 				OBJ_462 /* ShardObject.swift in Sources */,
 			);

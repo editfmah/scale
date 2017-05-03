@@ -7,15 +7,15 @@
 //
 
 import Foundation
-//import Kitura
-//import KituraNet
-//
-//class BaseRequest {
-//
-//    class func HandleRequest(request: RouterRequest, response: RouterResponse) -> Dictionary<String, Any> {
-//        
-//        return ["f":""]
-//        
-//    }
-//    
-//}
+import Kitura
+import KituraNet
+
+class BaseRequest {
+
+    class func HandleRequest(request: RouterRequest, response: RouterResponse) -> Dictionary<String, Any> {
+        
+        return ["f":""]
+        
+    }
+    
+}

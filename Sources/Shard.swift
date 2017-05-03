@@ -20,14 +20,15 @@ class Shard : DataObject, DataObjectProtocol {
     var type: ShardType!
     var keyspace: String?
     var partition: String?
+    var template: String?
     var replicas: Int?
-    var hasBeenRefactored: Bool = false
     var lastTouched: Date = Date()
     var referenceCount: Int = 0
     var db: SWSQLite!
     var lock :Mutex!
+    var dirty: Bool = true
     
-    convenience init(shardType: ShardType, shardKeyspace: String, shardPartition: String) {
+    convenience init(shardType: ShardType, shardKeyspace: String, shardPartition: String, shardTemplate: String?) {
         
         self.init()
         
@@ -35,8 +36,7 @@ class Shard : DataObject, DataObjectProtocol {
         self.keyspace = shardKeyspace
         self.type = shardType
         self.partition = shardPartition
-        hasBeenRefactored = false
-        
+        self.template = shardTemplate
         FileShardDirectoryCreate()
         db = SWSQLite(path: FileShardPath(keyspace: self.keyspace!, partition: self.partition!))
         Open()
@@ -46,11 +46,12 @@ class Shard : DataObject, DataObjectProtocol {
     override func populateFromRecord(_ record: Record) {
         self.keyspace = record["keyspace"]?.asString()
         self.partition = record["partition"]?.asString()
+        self.template = record["template"]?.asString()
         self.replicas = record["replicas"]?.asInt()
     }
     
     override public func ExcludeProperties() -> [String] {
-        return ["db","lock","hasBeenRefactored","lastTouched","referenceCount","type"]
+        return ["db","lock","hasBeenRefactored","lastTouched","referenceCount","type","dirty"]
     }
     
     override public class func GetTables() -> [Action] {
@@ -58,6 +59,7 @@ class Shard : DataObject, DataObjectProtocol {
             Action(createTable: "Shard"),
             Action(addColumn: "keyspace", type: .String, table: "Shard"),
             Action(addColumn: "partition", type: .String, table: "Shard"),
+            Action(addColumn: "template", type: .String, table: "Shard"),
             Action(addColumn: "replicas", type: .Numeric, table: "Shard")
         ]
     }
@@ -93,7 +95,7 @@ class Shard : DataObject, DataObjectProtocol {
     
     private func Open() {
         
-        if !hasBeenRefactored {
+        if dirty {
             
             lock.mutex {
                 
@@ -107,7 +109,7 @@ class Shard : DataObject, DataObjectProtocol {
                     Register()
                 }
                 
-                hasBeenRefactored = true
+                dirty = false
                 
             }
         }
@@ -155,12 +157,15 @@ class Shard : DataObject, DataObjectProtocol {
         let results = sys.read(sql: "SELECT * FROM Shard WHERE keyspace = ? AND partition = ?", params: [keyspace as Any, partition as Any])
         if results.count == 0 {
             // we need to create a new entry in the system shard
-            let _ = Keyspace.CreateKeyspace(keyspace: keyspace!, replication: 1)
-            let shard = Shard()
-            shard.type = .Partition
-            shard.keyspace = keyspace
-            shard.partition = partition
-            sys.write(shard.Commit())
+            if Keyspace.Exists(keyspace!) {
+                let shard = Shard()
+                shard.type = .Partition
+                shard.keyspace = keyspace
+                shard.partition = partition
+                sys.write(shard.Commit())
+            } else {
+                assertionFailure("shard created without the corresponding keyspace")
+            }
         }
         
         // now Refactor the shard
@@ -168,51 +173,79 @@ class Shard : DataObject, DataObjectProtocol {
     }
     
     private func Refactor() {
+        
         // queries the system shard to get the schema changes, first get the current version if there is one
+        
         let sys = Shards.systemShard()
-        var lastSchemaUpdate = timeuuid(offset: -1486415754) // create an id ~ 30 years in the past
+        
+        var template_lastSchemaUpdate = timeuuid(offset: -1486415754) // create an id ~ 30 years in the past
+        var keyspace_lastSchemaUpdate = timeuuid(offset: -1486415754) // create an id ~ 30 years in the past
+        
+        var shard = _shard_()
         let results = db.query(sql: "SELECT * FROM _shard_ LIMIT 1;", params: [])
         if results.count == 0 {
-            let shard = _shard_()
-            shard.version = lastSchemaUpdate
+            
+            shard.template_version = template_lastSchemaUpdate
+            shard.keyspace_version = keyspace_lastSchemaUpdate
             shard.keyspace = keyspace
             shard.partition = partition
             db.execute(compiledAction: shard.Commit())
+            
         } else {
             
             // there is a record, go and get the version id
-            let shard: _shard_ = _shard_(results[0])
-            lastSchemaUpdate = shard.version!
+            shard = _shard_(results[0])
+            template_lastSchemaUpdate = shard.template_version!
+            keyspace_lastSchemaUpdate = shard.keyspace_version!
             
-            // now select all the schema updates for this keyspace beyond the version it is currently set to
-            let upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? AND version > ? ORDER BY version", params: [
-                    keyspace as Any,
-                    lastSchemaUpdate
-                ]))
+        }
+        
+        // now select all the schema updates for this keyspace beyond the version it is currently set to
+        
+        var upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? AND version > ? ORDER BY version", params: [
+            template as Any,
+            template_lastSchemaUpdate
+            ]))
+        
+        if upgrades.count > 0 {
             
-            if upgrades.count > 0 {
+            var lastVersion = ""
+            for upgrade in upgrades {
                 
-                var lastVersion = ""
-                for upgrade in upgrades {
-                    
-                    lastVersion = upgrade.version!
-                    let change = upgrade.change!
-                    
-                    db.execute(sql: change, params: [])
-                    
-                }
+                lastVersion = upgrade.version!
+                let change = upgrade.change!
                 
-                db.execute(sql: "DELETE FROM _shard_", params: [])
-                
-                let shard = _shard_()
-                shard.keyspace = keyspace
-                shard.partition = partition
-                shard.version = lastVersion
-                db.execute(compiledAction: shard.Commit())
+                db.execute(sql: change, params: [])
                 
             }
             
+            shard.template_version = lastVersion
+            
         }
+        
+        upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? AND version > ? ORDER BY version", params: [
+            keyspace! as Any,
+            keyspace_lastSchemaUpdate
+            ]))
+        
+        if upgrades.count > 0 {
+            
+            var lastVersion = ""
+            for upgrade in upgrades {
+                
+                lastVersion = upgrade.version!
+                let change = upgrade.change!
+                
+                db.execute(sql: change, params: [])
+                
+            }
+            
+            shard.keyspace_version = lastVersion
+            
+        }
+        
+        db.execute(compiledAction: shard.Commit())
+        
     }
     
 }

@@ -24,7 +24,7 @@ class ShardCoordinator {
             if shards[key] != nil {
                 shard = shards[key]
             } else {
-                shard = Shard(shardType: .System, shardKeyspace: Node.Identifiers.SystemShardKeyspace, shardPartition: Node.Identifiers.SystemShardParition)
+                shard = Shard(shardType: .System, shardKeyspace: Node.Identifiers.SystemShardKeyspace, shardPartition: Node.Identifiers.SystemShardParition, shardTemplate: nil)
                 shards[key] = shard
             }
         }
@@ -44,13 +44,26 @@ class ShardCoordinator {
             } else {
                 
                 // shard has not been registered yet, create it, add it to the co-ordinator
-                shard = Shard(shardType: .Partition, shardKeyspace: keyspace, shardPartition: partition)
+                
+                let keyspaceRecord = Keyspace.Get(keyspace)
+                
+                shard = Shard(shardType: .Partition, shardKeyspace: keyspace, shardPartition: partition, shardTemplate: keyspaceRecord?.template)
                 shard?.take()
                 shards[key] = shard
                 
             }
         }
         return shard!
+    }
+    
+    func invalidateShardsInKeyspace(_ keyspace: String) {
+        lock.mutex {
+            for shard in self.shards.values {
+                if shard.keyspace == keyspace {
+                    shard.dirty = true
+                }
+            }
+        }
     }
     
     func returnShard(shard: Shard) {

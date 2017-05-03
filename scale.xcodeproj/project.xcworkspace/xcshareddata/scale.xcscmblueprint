@@ -4,28 +4,41 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "FD250B44C580620FD38FCC54171D17A12182655B" : 9223372036854775807,
     "40635794C1929E96A4709153927459486D34FA7B" : 9223372036854775807,
     "2AA9FFF9CE55C17F2C30B40B11DC789424944716" : 9223372036854775807,
     "43425688648679ECEC3105C3812E3C82D04FD563" : 9223372036854775807,
+    "1A81AC7E588BE86E760603555BCE76FB0C611997" : 9223372036854775807,
     "77528AA6C8B451D66547916CA3CB970C85CBD7B4" : 9223372036854775807,
-    "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3" : 9223372036854775807,
+    "85E996FB125657C20E42A299A76F925867A7A6E4" : 9223372036854775807,
     "43C021D2F0E746BBB29CA4E06229F111196D4871" : 9223372036854775807,
-    "FD250B44C580620FD38FCC54171D17A12182655B" : 9223372036854775807
+    "B48A9580752F9C43885C949B19DDA563AC9BB228" : 9223372036854775807,
+    "C3D8ED1CB28D809ADCE2C0DE74935E8A502ACD53" : 9223372036854775807,
+    "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "38685F27-C7ED-4272-B023-9260A07FB744",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "40635794C1929E96A4709153927459486D34FA7B" : "scale\/Packages\/Kitura-net-1.0.2\/",
+    "FD250B44C580620FD38FCC54171D17A12182655B" : "scale\/.build\/checkouts\/SWSQLite.git--5474724218429766585\/",
+    "40635794C1929E96A4709153927459486D34FA7B" : "scale\/.build\/checkouts\/Kitura-net.git--7410958935072501107\/",
     "2AA9FFF9CE55C17F2C30B40B11DC789424944716" : "scale\/",
-    "43425688648679ECEC3105C3812E3C82D04FD563" : "scale\/Packages\/Kitura-1.0.1\/",
-    "77528AA6C8B451D66547916CA3CB970C85CBD7B4" : "scale\/Packages\/SSLService-0.11.56\/",
-    "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3" : "scale\/Packages\/SwiftyJSON-14.2.1\/",
-    "43C021D2F0E746BBB29CA4E06229F111196D4871" : "scale\/Packages\/Socket-0.11.40\/",
-    "FD250B44C580620FD38FCC54171D17A12182655B" : "scale\/Packages\/SWSQLite-1.0.1\/"
+    "43425688648679ECEC3105C3812E3C82D04FD563" : "scale\/.build\/checkouts\/Kitura.git-6522211175291160341\/",
+    "1A81AC7E588BE86E760603555BCE76FB0C611997" : "scale\/.build\/checkouts\/Kitura-TemplateEngine.git--5059963620657797085\/",
+    "77528AA6C8B451D66547916CA3CB970C85CBD7B4" : "scale\/.build\/checkouts\/BlueSSLService.git--6577639804771281610\/",
+    "85E996FB125657C20E42A299A76F925867A7A6E4" : "scale\/.build\/checkouts\/LoggerAPI.git--6449715459278086880\/",
+    "43C021D2F0E746BBB29CA4E06229F111196D4871" : "scale\/.build\/checkouts\/BlueSocket.git-3162807777605905816\/",
+    "B48A9580752F9C43885C949B19DDA563AC9BB228" : "scale\/.build\/checkouts\/CHTTPParser.git-4187859997338157208\/",
+    "C3D8ED1CB28D809ADCE2C0DE74935E8A502ACD53" : "scale\/.build\/checkouts\/CryptoSwift.git--6440749087414195235\/",
+    "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3" : "scale\/.build\/checkouts\/SwiftyJSON.git--6955445084174387031\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "scale",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "scale.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/ah\/Projects\/scale\/.build\/repositories\/Kitura-TemplateEngine.git--5059963620657797085",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1A81AC7E588BE86E760603555BCE76FB0C611997"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/sharksync\/scale.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
@@ -50,6 +63,21 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/BlueSSLService.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "77528AA6C8B451D66547916CA3CB970C85CBD7B4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/ah\/Projects\/scale\/.build\/repositories\/LoggerAPI.git--6449715459278086880",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "85E996FB125657C20E42A299A76F925867A7A6E4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/ah\/Projects\/scale\/.build\/repositories\/CHTTPParser.git-4187859997338157208",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B48A9580752F9C43885C949B19DDA563AC9BB228"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/ah\/Projects\/scale\/.build\/repositories\/CryptoSwift.git--6440749087414195235",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C3D8ED1CB28D809ADCE2C0DE74935E8A502ACD53"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/SwiftyJSON.git",

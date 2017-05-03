@@ -25,8 +25,8 @@ class DataObject {
     
     init(_ values: Record) {
         
-        self._id_ = uuid()
-        self._timestamp_ = timeuuid()
+        self._id_ = (values["_id_"]?.asString())!
+        self._timestamp_ = (values["_timestamp_"]?.asString())!
 
         populateFromRecord(values)
         

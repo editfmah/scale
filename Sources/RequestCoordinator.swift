@@ -7,12 +7,23 @@
 //
 
 import Foundation
-//import KituraNet
-//import Kitura
-//import SwiftyJSON
-//
-//class RequestCoordinator {
-//    
-//    
-//    
-//}
+
+class RequestCoordinator {
+    
+    func HandleRequest(_ request: Request) {
+        
+        switch request.type {
+        case .Keyspace:
+            _ = KeyspaceHandler(request)
+        case .Read:
+            _ = ShardHandler(request)
+        case .Write:
+            _ = ShardHandler(request)
+        default:
+            request.error = RequestError.UnknownType
+            request.message = "An unknown request type was received."
+        }
+        
+    }
+    
+}
