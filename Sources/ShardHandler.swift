@@ -18,8 +18,7 @@ class ShardHandler {
         case .Write:
             _ = ShardWrite(request)
         default:
-            request.error = RequestError.Keyspace
-            request.message = "Unknown command for Keyspace request"
+            request.setError("Unknown command for Keyspace request")
         }
         
     }

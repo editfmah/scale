@@ -40,11 +40,37 @@ router.route("/").post {
     let body = try request.readString() ?? ""
     let json = JSON(data: body.data(using: .utf8, allowLossyConversion: false)!)
     
-    // create a request object
-    let reqObj = Request(json)
-    let handler = RequestCoordinator()
-    handler.HandleRequest(reqObj)
-    response.send(json: reqObj.response)
+    // see if this is an array or a dictionary
+    if json.type == .array {
+        
+        let requests = json.array
+        var responses : [JSON] = []
+        if requests != nil && (requests?.count)! > 0 {
+            for jsonRequest in requests! {
+                
+                // create a request object
+                let reqObj = Request(jsonRequest)
+                let handler = RequestCoordinator()
+                handler.HandleRequest(reqObj)
+                responses.append(reqObj.response)
+                
+            }
+        }
+        
+        let responseArray = JSON(responses)
+        response.send(json: responseArray)
+        
+    } else if json.type == .dictionary {
+        
+        // create a request object
+        let reqObj = Request(json)
+        let handler = RequestCoordinator()
+        handler.HandleRequest(reqObj)
+        response.send(json: reqObj.response)
+        
+    }
+    
+    
     next()
     
 }

@@ -20,8 +20,7 @@ class RequestCoordinator {
         case .Write:
             _ = ShardHandler(request)
         default:
-            request.error = RequestError.UnknownType
-            request.message = "An unknown request type was received."
+            request.setError("An unknown request type was received.")
         }
         
     }

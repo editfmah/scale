@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import SWSQLite
 
 enum RequestType {
     case Unset
@@ -29,15 +30,13 @@ class Request {
     
     // request/response data
     private var request: JSON = JSON(nilLiteral: ())
-    var response: JSON = JSON(dictionaryLiteral: ("error",NSNull()), ("message", NSNull()), ("type" , NSNull()), ("payload", NSNull()))
+    var response: JSON = JSON(dictionaryLiteral: ("error",NSNull()), ("message", NSNull()), ("type" , NSNull()), ("payload", NSNull()),("requestId", NSNull()))
     
     // packet contents
     var user: String = ""
     var password: String = ""
     var token: String = ""
-    var error: RequestError? = nil
     var type: RequestType = .Unset
-    var message: String? = nil
     var payload: Payload = Payload(JSON(nilLiteral: ()))
     
     init(_ json: JSON) {
@@ -59,6 +58,43 @@ class Request {
         if self.request["payload"].exists() {
             self.payload = Payload(self.request["payload"])
         }
+        
+        self.response["requestId"] = JSON(uuid())
+        if self.request["requestId"].exists() {
+            self.response["requestId"] = self.request["requestId"]
+        }
+        
+    }
+    
+    func setError(_ error: String) {
+        self.response["error"] = JSON(error)
+    }
+    
+    func setMessage(_ message: String) {
+        self.response["message"] = JSON(message)
+    }
+    
+    func setResults(_ results: [Record]) {
+        
+        var arr: [JSON] = []
+        for r in results {
+            var dic: [String:JSON] = [:]
+            for key in r.keys {
+                
+                if r[key]?.getType() == .String {
+                    dic[key] = JSON(r[key]!.asString()!)
+                } else if r[key]?.getType() == .Double {
+                    dic[key] = JSON(r[key]!.asDouble()!)
+                } else if r[key]?.getType() == .Int {
+                    dic[key] = JSON(r[key]!.asInt()!)
+                } else {
+                    dic[key] = JSON(NSNull())
+                }
+            }
+            arr.append(JSON(dic))
+        }
+        
+        self.response["results"] = JSON(arr)
         
     }
     

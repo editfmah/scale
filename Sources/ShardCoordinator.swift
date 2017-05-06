@@ -34,7 +34,6 @@ class ShardCoordinator {
     func getShard(keyspace: String, partition: String) -> Shard {
         var shard: Shard? = nil
         let key = makeKey(keyspace: keyspace, partition: partition)
-        print(key)
         lock.mutex {
             if shards[key] != nil {
                 
@@ -59,7 +58,7 @@ class ShardCoordinator {
     func invalidateShardsInKeyspace(_ keyspace: String) {
         lock.mutex {
             for shard in self.shards.values {
-                if shard.keyspace == keyspace {
+                if shard.keyspace == keyspace || shard.template == keyspace {
                     shard.dirty = true
                 }
             }

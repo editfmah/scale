@@ -17,12 +17,36 @@ class KeyspaceModify {
 
         // look to see if this keyspace already exists, if it does throw an error
         if !Keyspace.Exists(params.keyspace) {
-            request.error = RequestError.Keyspace
-            request.message = "Keyspace with name '\(params.keyspace)' does not exist."
+            request.setError("Keyspace with name '\(params.keyspace)' does not exist.")
             return
         }
         
-        // TODO: validate this update against the current template/schemas
+        // validate this update against the current template/schemas
+        let db = SWSQLite(path: ":memory:")
+        let key = Keyspace.Get(params.keyspace)
+        let sys = Shards.systemShard()
+        
+        if key?.template != nil {
+            let upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? ORDER BY version", params: [
+                key?.template! as Any]).results)
+            for schema in upgrades {
+                _ = db.execute(sql: schema.change!, params: [])
+            }
+        }
+        
+        let upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? ORDER BY version", params: [
+            params.keyspace]).results)
+        for schema in upgrades {
+            _ = db.execute(sql: schema.change!, params: [])
+        }
+        
+        // now test the new change to make sure it is a valid change, before inserting it into the schema table
+        let result = db.execute(sql: request.payload.update, params: [])
+        if result.error != nil {
+            request.setError("Error modifying keyspace '\(params.keyspace)' : \(result.error!)")
+            return
+        }
+        
         
         // add this update into the KeyspaceSchema.
         
@@ -30,11 +54,7 @@ class KeyspaceModify {
         schema.keyspace = request.payload.keyspace
         schema.version = timeuuid()
         schema.change = request.payload.update
-        
-        let sys = Shards.systemShard()
         sys.write(schema.Commit())
-        
-        
         
         // now invalidate all open shards for this keyspace
         Shards.invalidateShardsInKeyspace(schema.keyspace!)

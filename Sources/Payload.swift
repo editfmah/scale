@@ -21,6 +21,13 @@ class Payload {
     var replication: Int = 0
     var values: [String:Any] = [:]
     
+    var columns: [String] = ["*"]
+    var whereStmt: String = "1=1"
+    var parameters: [Any] = []
+    var offset: Int = 0
+    var limit: Int = 999999
+    var order: String = "ROWID"
+    
     init(_ json: JSON) {
         
         self.raw = json
@@ -65,6 +72,40 @@ class Payload {
             if !json["values"].isEmpty {
                 self.values = json["values"].dictionaryObject!
             }
+        }
+        
+        if json["columns"].exists() {
+            if !json["columns"].isEmpty {
+                columns = []
+                for f in json["columns"].arrayObject! {
+                    let col = f as! String
+                    columns.append(col)
+                }
+            }
+        }
+        
+        if json["where"].exists() {
+            self.whereStmt = json["where"].stringValue
+        }
+        
+        if json["parameters"].exists() {
+            if !json["parameters"].isEmpty {
+                for p in json["parameters"].arrayObject! {
+                    parameters.append(p)
+                }
+            }
+        }
+        
+        if json["offset"].exists() {
+            self.offset = json["offset"].intValue
+        }
+        
+        if json["limit"].exists() {
+            self.limit = json["limit"].intValue
+        }
+        
+        if json["order"].exists() {
+            self.order = json["order"].stringValue
         }
         
     }

@@ -21,15 +21,13 @@ class KeyspaceCreate {
         
         // look to see if this keyspace already exists, if it does throw an error
         if Keyspace.Exists(params.keyspace) {
-            request.error = RequestError.Keyspace
-            request.message = "Keyspace with name '\(params.keyspace)' already exists in system database.  Drop the keyspace if you wish to re-create it."
+            request.setError("Keyspace with name '\(params.keyspace)' already exists in system database.  Drop the keyspace if you wish to re-create it.")
             return
         }
         
         // create this keyspace
         let id = Keyspace.Create(params.keyspace, replication: replication, template: template)
-        request.error = nil
-        request.message = "Keyspace '\(params.keyspace)' created with uuid \(id)."
+        request.setMessage("Keyspace '\(params.keyspace)' created with uuid \(id).")
         
     }
     

@@ -13,31 +13,31 @@ class Keyspace : DataObject {
     
     // object vars
     var name: String?
-    var replication: NSNumber?
-    var size: NSNumber?
+    var replication: Int?
+    var size: Int?
     var template: String?
     
     convenience init(_name: String, _replication: Int, _size: Int, _template: String?) {
         self.init()
         self.name = _name
-        self.replication = NSNumber(value: _replication)
-        self.size = NSNumber(value: _size)
+        self.replication = _replication
+        self.size = _size
     }
     
     override func populateFromRecord(_ record: Record) {
         self.name = record["name"]?.asString()
         self.template = record["template"]?.asString()
-        self.replication = record["replication"]?.asNumber()
-        self.size = record["size"]?.asNumber()
+        self.replication = record["replication"]?.asInt()
+        self.size = record["size"]?.asInt()
     }
     
     override class func GetTables() -> [Action] {
         var actions = [
             Action(createTable: "Keyspace"),
             Action(addColumn: "name", type: .String, table: "Keyspace"),
-            Action(addColumn: "replication", type: .Numeric, table: "Keyspace"),
-            Action(addColumn: "size", type: .Numeric, table: "Keyspace"),
-            Action(addColumn: "template", type: .Numeric, table: "Keyspace")
+            Action(addColumn: "replication", type: .Int, table: "Keyspace"),
+            Action(addColumn: "size", type: .Int, table: "Keyspace"),
+            Action(addColumn: "template", type: .String, table: "Keyspace")
         ]
         
         actions.append(contentsOf: KeyspaceSchema.GetTables())
@@ -49,7 +49,7 @@ class Keyspace : DataObject {
     class func Create(_ keyspace: String, replication: Int, template: String?) -> String {
         let sys = Shards.systemShard()
         var sysKeyspaces: [Keyspace] = []
-        for record in sys.read(sql: "SELECT * FROM Keyspace WHERE name = ? LIMIT 1", params: [keyspace]) {
+        for record in sys.read(sql: "SELECT * FROM Keyspace WHERE name = ? LIMIT 1", params: [keyspace]).results {
             let k = Keyspace(record)
             sysKeyspaces.append(k)
         }
@@ -58,18 +58,18 @@ class Keyspace : DataObject {
             let newKeyspace = Keyspace()
             keyspaceId = newKeyspace._id_
             newKeyspace.name = keyspace
-            newKeyspace.replication = NSNumber(value: replication)
+            newKeyspace.replication = replication
             newKeyspace.size = 0
             newKeyspace.template = template
-            sys.write(newKeyspace.Commit())
+            _ = sys.write(newKeyspace.Commit())
         } else {
             
             let record = sysKeyspaces[0]
             keyspaceId = record._id_
             let rep = record.replication
-            if rep?.intValue != replication {
-                record.replication = NSNumber(value: replication)
-                sys.write(record.Commit())
+            if rep != replication {
+                record.replication = replication
+                _ = sys.write(record.Commit())
             }
             
         }
@@ -79,7 +79,7 @@ class Keyspace : DataObject {
     class func Exists(_ keyspace: String) -> Bool {
         let sys = Shards.systemShard()
         let count = sys.read(sql: "SELECT NULL FROM Keyspace WHERE name = ?", params: [keyspace])
-        if count.count > 0 {
+        if count.results.count > 0 {
             return true
         } else {
             return false
@@ -89,8 +89,8 @@ class Keyspace : DataObject {
     class func Get(_ keyspace: String) -> Keyspace? {
         let sys = Shards.systemShard()
         let k = sys.read(sql: "SELECT * FROM Keyspace WHERE name = ?", params: [keyspace])
-        if k.count > 0 {
-            for record in k {
+        if k.results.count > 0 {
+            for record in k.results {
                 let key = Keyspace(record)
                 return key
             }

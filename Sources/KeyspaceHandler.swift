@@ -44,8 +44,7 @@ class KeyspaceHandler {
         case "drop":
         _ = KeyspaceDrop(request, params: params)
         default:
-            request.error = RequestError.Keyspace
-            request.message = "Unknown command for Keyspace request"
+            request.setError("Unknown command for Keyspace request")
         }
         
     }

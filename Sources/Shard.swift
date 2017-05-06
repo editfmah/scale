@@ -60,7 +60,7 @@ class Shard : DataObject, DataObjectProtocol {
             Action(addColumn: "keyspace", type: .String, table: "Shard"),
             Action(addColumn: "partition", type: .String, table: "Shard"),
             Action(addColumn: "template", type: .String, table: "Shard"),
-            Action(addColumn: "replicas", type: .Numeric, table: "Shard")
+            Action(addColumn: "replicas", type: .Int, table: "Shard")
         ]
     }
     
@@ -102,10 +102,10 @@ class Shard : DataObject, DataObjectProtocol {
                 // create the default schema for the partition type
                 switch self.type! {
                 case .System:
-                    db.execute(actions: Keyspace.GetTables())
-                    db.execute(actions: Shard.GetTables())
+                    _ = db.execute(actions: Keyspace.GetTables())
+                    _ = db.execute(actions: Shard.GetTables())
                 case .Partition:
-                    db.execute(actions: _shard_.GetTables())
+                    _ = db.execute(actions: _shard_.GetTables())
                     Register()
                 }
                 
@@ -116,32 +116,55 @@ class Shard : DataObject, DataObjectProtocol {
         
     }
     
-    private func readRaw(sql: String, params: [Any]) -> [Record] {
+    private func readRaw(sql: String, params: [Any]) -> Result {
         return db.query(sql: sql, params: params)
     }
     
-    private func writeRaw(sql: String, params: [Any]) {
-        db.execute(sql: sql, params: params)
+    private func writeRaw(sql: String, params: [Any]) -> Result {
+        return db.execute(sql: sql, params: params)
     }
     
-    public func read(sql: String, params: [Any]) -> [Record] {
-        var retValue: [Record] = []
+    public func read(sql: String, params: [Any]) -> Result {
+        
+        var retValue = Result()
+        
         lock.mutex {
+            if dirty {
+                Refactor()
+            }
             retValue = readRaw(sql: sql, params: params)
         }
         return retValue
     }
     
-    public func write(_ action:SWSQLAction) {
+    public func write(_ action:SWSQLAction) -> Result {
+        
+        var retValue = Result()
+        
         lock.mutex {
-            db.execute(compiledAction: action)
+            if dirty {
+                Refactor()
+            }
+            retValue = db.execute(compiledAction: action)
         }
+        
+        return retValue
+        
     }
     
-    public func write(sql: String, params: [Any]) {
+    public func write(sql: String, params: [Any]) -> Result {
+        
+        var retValue = Result()
+        
         lock.mutex {
-            writeRaw(sql: sql, params: params)
+            if dirty {
+                Refactor()
+            }
+            retValue = writeRaw(sql: sql, params: params)
         }
+        
+        return retValue
+        
     }
     
     private func Close() {
@@ -155,14 +178,14 @@ class Shard : DataObject, DataObjectProtocol {
         // registers this shard with the node, and applies the current schema
         let sys = Shards.systemShard()
         let results = sys.read(sql: "SELECT * FROM Shard WHERE keyspace = ? AND partition = ?", params: [keyspace as Any, partition as Any])
-        if results.count == 0 {
+        if results.results.count == 0 {
             // we need to create a new entry in the system shard
             if Keyspace.Exists(keyspace!) {
                 let shard = Shard()
                 shard.type = .Partition
                 shard.keyspace = keyspace
                 shard.partition = partition
-                sys.write(shard.Commit())
+                _ = sys.write(shard.Commit())
             } else {
                 assertionFailure("shard created without the corresponding keyspace")
             }
@@ -183,18 +206,18 @@ class Shard : DataObject, DataObjectProtocol {
         
         var shard = _shard_()
         let results = db.query(sql: "SELECT * FROM _shard_ LIMIT 1;", params: [])
-        if results.count == 0 {
+        if results.results.count == 0 {
             
             shard.template_version = template_lastSchemaUpdate
             shard.keyspace_version = keyspace_lastSchemaUpdate
             shard.keyspace = keyspace
             shard.partition = partition
-            db.execute(compiledAction: shard.Commit())
+            _ = db.execute(compiledAction: shard.Commit())
             
         } else {
             
             // there is a record, go and get the version id
-            shard = _shard_(results[0])
+            shard = _shard_(results.results[0])
             template_lastSchemaUpdate = shard.template_version!
             keyspace_lastSchemaUpdate = shard.keyspace_version!
             
@@ -205,7 +228,7 @@ class Shard : DataObject, DataObjectProtocol {
         var upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? AND version > ? ORDER BY version", params: [
             template as Any,
             template_lastSchemaUpdate
-            ]))
+            ]).results)
         
         if upgrades.count > 0 {
             
@@ -226,7 +249,7 @@ class Shard : DataObject, DataObjectProtocol {
         upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? AND version > ? ORDER BY version", params: [
             keyspace! as Any,
             keyspace_lastSchemaUpdate
-            ]))
+            ]).results)
         
         if upgrades.count > 0 {
             
