@@ -50,7 +50,8 @@ class ShardCoordinator {
                 shard?.take()
                 shards[key] = shard
                 
-                if shards.count >= 1000 {
+                // barn door limit enforcement
+                if shards.count >= 2048 {
                     for key in Array(shards.keys) {
                         let sh = shards[key]
                         if sh?.peekReferenceCount() == 0 && sh?.type == .Partition {
