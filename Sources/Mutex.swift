@@ -8,35 +8,26 @@
 
 import Foundation
 import Dispatch
+import SWSQLite
 
 class Mutex {
     
-    private var lock: DispatchQueue
-    private var locked: Bool = false
     private var thread: Thread? = nil;
+    private var lock: DispatchQueue
     
     init() {
-        lock = DispatchQueue(label:UUID().uuidString)
+        lock = DispatchQueue(label: uuid())
     }
     
     func mutex(_ closure: ()->()) {
-        if !locked {
-            locked = true
-            thread = Thread.current
+        if thread != Thread.current {
             lock.sync {
+                thread = Thread.current
                 closure()
+                thread = nil
             }
-            thread = nil
-            locked = false
         } else {
-            if thread == Thread.current {
-                closure()
-            } else {
-                // the lock has been requested on another thread, so we can queue this up on the sync
-                lock.sync {
-                    closure()
-                }
-            }
+            closure()
         }
     }
     

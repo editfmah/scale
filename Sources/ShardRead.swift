@@ -35,6 +35,8 @@ class ShardRead {
             request.setResults(results.results)
         }
         
+        Shards.returnShard(shard: shard)
+        
     }
     
 }

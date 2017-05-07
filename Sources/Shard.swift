@@ -167,7 +167,7 @@ class Shard : DataObject, DataObjectProtocol {
         
     }
     
-    private func Close() {
+    public func Close() {
         lock.mutex {
             db.close()
         }
@@ -238,7 +238,7 @@ class Shard : DataObject, DataObjectProtocol {
                 lastVersion = upgrade.version!
                 let change = upgrade.change!
                 
-                db.execute(sql: change, params: [])
+                _ = db.execute(sql: change, params: [])
                 
             }
             
@@ -259,7 +259,7 @@ class Shard : DataObject, DataObjectProtocol {
                 lastVersion = upgrade.version!
                 let change = upgrade.change!
                 
-                db.execute(sql: change, params: [])
+                _ = db.execute(sql: change, params: [])
                 
             }
             
@@ -267,7 +267,7 @@ class Shard : DataObject, DataObjectProtocol {
             
         }
         
-        db.execute(compiledAction: shard.Commit())
+        _ = db.execute(compiledAction: shard.Commit())
         
     }
     

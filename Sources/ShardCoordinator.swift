@@ -50,6 +50,19 @@ class ShardCoordinator {
                 shard?.take()
                 shards[key] = shard
                 
+                if shards.count >= 1000 {
+                    for key in Array(shards.keys) {
+                        let sh = shards[key]
+                        if sh?.peekReferenceCount() == 0 && sh?.type == .Partition {
+                            // this shard is not in use anywhere
+                            sh?.Close()
+                            shards.removeValue(forKey: key)
+                        }
+                    }
+                }
+                
+                print(shards.count)
+                
             }
         }
         return shard!

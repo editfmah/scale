@@ -82,6 +82,8 @@ class ShardWrite {
             request.setError("write failed, no primary key value was specified. '\(pk)' needs to be specified for a successful write.")
         }
         
+        Shards.returnShard(shard: shard)
+        
     }
     
 }
