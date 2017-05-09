@@ -14,11 +14,23 @@ class Settings {
     private var settingsFilePath: String
     private var values: JSON
     
-    var nodeId: String?
-    var peerName: String?
-    var peerURL: String?
-    var queryPort: Int?
-    var dataPath: String?
+    var nodeId: String = UUID().uuidString.lowercased()
+    var peerName: String = "scaledb.node.000"
+    var peers: [String] = []
+    var queryPort: Int = 8080
+    var dataPath: String = ""
+    
+    var roleData: Bool = true
+    var roleBackstop: Bool = false
+    var roleQueryCoordinator: Bool = false
+    
+    var maxShardsOpen: Int = 512
+    var cacheQueries: Bool = true
+    
+    var compactDatabases: Bool = true
+    var compactDatabaseFrequency: Int = 1500
+    var reindexDatabases: Bool = true
+    var reindexDatabaseFrequency: Int = 1500
     
     init(path: String) {
         
@@ -54,7 +66,6 @@ class Settings {
     private func populateProperties() {
         nodeId = values["node_id"].stringValue
         peerName = values["peer_name"].stringValue
-        peerURL = values["peer_url"].stringValue
         queryPort = values["query_port"].intValue
     }
     

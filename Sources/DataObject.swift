@@ -87,7 +87,7 @@ class DataObject {
         return SWSQLAction(stmt: statement, params: parameters, operation: .Insert)
     }
     
-    public func Delete(object: Any) -> SWSQLAction {
+    public func Delete() -> SWSQLAction {
         
         let statement = "DELETE FROM \(Mirror(reflecting: self).subjectType) WHERE _id_ = ?;"
         

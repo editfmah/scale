@@ -51,7 +51,7 @@ class ShardCoordinator {
                 shards[key] = shard
                 
                 // barn door limit enforcement
-                if shards.count >= 2048 {
+                if shards.count >= 512 {
                     for key in Array(shards.keys) {
                         let sh = shards[key]
                         if sh?.peekReferenceCount() == 0 && sh?.type == .Partition {
@@ -87,6 +87,64 @@ class ShardCoordinator {
     
     func makeKey(keyspace: String, partition: String) -> String {
         return "\(keyspace)-\(partition)"
+    }
+    
+    func DeleteShardsForKeyspace(_ keyspace: String) {
+        
+        var remaining = true
+        var shardsToRemove: [String] = []
+        
+        while remaining {
+            
+            remaining = false
+            
+            lock.mutex {
+                
+                for key in self.shards.keys {
+                    let shard = self.shards[key]!
+                    if shard.keyspace == keyspace {
+                        
+                        if shard.peekReferenceCount() == 0 {
+                            shard.Close()
+                            _ = sys.write(shard.Delete())
+                            shard.removefiles()
+                            shardsToRemove.append(key)
+                        } else {
+                            remaining = true
+                        }
+                        
+                    }
+                }
+                
+                for key in shardsToRemove {
+                    self.shards.removeValue(forKey: key)
+                }
+                
+                if remaining == false {
+                    // we are here, nothing is locked, nothing is remaining, go through the system database and delete all records and related files
+                    var outstanding = true
+                    while outstanding {
+                        
+                        // limit the query to 50 to stop huge keyspaces from blowing the stack
+                        let results = sys.read(sql: "SELECT * FROM Shard WHERE keyspace = ? LIMIT 50", params: [keyspace]).results
+                        for record in results {
+                            let shard = Shard(record)
+                            shard.removefiles()
+                            _ = sys.write(shard.Delete())
+                        }
+                        if results.count == 0 {
+                            outstanding = false
+                        }
+                        
+                    }
+                }
+                
+                shardsToRemove = []
+                
+            }
+            
+        }
+        
     }
     
 }

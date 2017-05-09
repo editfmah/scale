@@ -24,7 +24,6 @@ class KeyspaceModify {
         // validate this update against the current template/schemas
         let db = SWSQLite(path: ":memory:")
         let key = Keyspace.Get(params.keyspace)
-        let sys = Shards.systemShard()
         
         if key?.template != nil {
             let upgrades = KeyspaceSchema.ToCollection(sys.read(sql: "SELECT * FROM KeyspaceSchema WHERE keyspace = ? ORDER BY version", params: [

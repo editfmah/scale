@@ -19,6 +19,10 @@ class RequestCoordinator {
             _ = ShardHandler(request)
         case .Write:
             _ = ShardHandler(request)
+        case .System:
+            _ = SystemHandler(request)
+        case .Delete:
+            _ = ShardHandler(request)
         default:
             request.setError("An unknown request type was received.")
         }

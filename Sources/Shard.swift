@@ -37,6 +37,15 @@ class Shard : DataObject, DataObjectProtocol {
         self.type = shardType
         self.partition = shardPartition
         self.template = shardTemplate
+        
+        if shardType == .Partition {
+            // query to see if this shard exists in the database and then overlay the values
+            let results = sys.read(sql: "SELECT * FROM Shard WHERE keyspace = ? AND partition = ?", params: [shardKeyspace,shardPartition]).results
+            if results.count > 0 {
+                populateFromRecord(results[0])
+            }
+        }
+        
         FileShardDirectoryCreate()
         db = SWSQLite(path: FileShardPath(keyspace: self.keyspace!, partition: self.partition!))
         Open()
@@ -48,6 +57,8 @@ class Shard : DataObject, DataObjectProtocol {
         self.partition = record["partition"]?.asString()
         self.template = record["template"]?.asString()
         self.replicas = record["replicas"]?.asInt()
+        self._id_  = record["_id_"]!.asString()!
+        self._timestamp_  = record["_timestamp_"]!.asString()!
     }
     
     override public func ExcludeProperties() -> [String] {
@@ -60,7 +71,8 @@ class Shard : DataObject, DataObjectProtocol {
             Action(addColumn: "keyspace", type: .String, table: "Shard"),
             Action(addColumn: "partition", type: .String, table: "Shard"),
             Action(addColumn: "template", type: .String, table: "Shard"),
-            Action(addColumn: "replicas", type: .Int, table: "Shard")
+            Action(addColumn: "replicas", type: .Int, table: "Shard"),
+            Action(createIndexOnTable: "Shard", keyColumnName: "keyspace,partition", ascending: true)
         ]
     }
     
@@ -176,12 +188,11 @@ class Shard : DataObject, DataObjectProtocol {
     private func Register() {
         
         // registers this shard with the node, and applies the current schema
-        let sys = Shards.systemShard()
         let results = sys.read(sql: "SELECT * FROM Shard WHERE keyspace = ? AND partition = ?", params: [keyspace as Any, partition as Any])
         if results.results.count == 0 {
             // we need to create a new entry in the system shard
             if Keyspace.Exists(keyspace!) {
-                let shard = Shard()
+                let shard = self
                 shard.type = .Partition
                 shard.keyspace = keyspace
                 shard.partition = partition
@@ -198,8 +209,6 @@ class Shard : DataObject, DataObjectProtocol {
     private func Refactor() {
         
         // queries the system shard to get the schema changes, first get the current version if there is one
-        
-        let sys = Shards.systemShard()
         
         var template_lastSchemaUpdate = timeuuid(offset: -1486415754) // create an id ~ 30 years in the past
         var keyspace_lastSchemaUpdate = timeuuid(offset: -1486415754) // create an id ~ 30 years in the past
@@ -268,6 +277,18 @@ class Shard : DataObject, DataObjectProtocol {
         }
         
         _ = db.execute(compiledAction: shard.Commit())
+        
+    }
+    
+    func removefiles() {
+        
+        if FileManager().fileExists(atPath: FileShardPath(keyspace: self.keyspace!, partition: self.partition!)) {
+            do {
+                try FileManager().removeItem(atPath: FileShardPath(keyspace: self.keyspace!, partition: self.partition!))
+            } catch {
+                
+            }
+        }
         
     }
     

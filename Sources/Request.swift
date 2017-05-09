@@ -17,6 +17,8 @@ enum RequestType {
     case Read
     case Write
     case Sync
+    case System
+    case Delete
 }
 
 enum RequestError: String {
@@ -53,6 +55,10 @@ class Request {
             type = .Read
         } else if self.request["type"].stringValue == "write" {
             type = .Write
+        } else if self.request["type"].stringValue == "system" {
+            type = .System
+        } else if self.request["type"].stringValue == "delete" {
+            type = .Delete
         }
         
         if self.request["payload"].exists() {

@@ -8,6 +8,9 @@
 
 import Foundation
 
+let lock = Mutex()
+var pkCache: [String:String] = [:]
+
 class ShardWrite {
     
     init(_ request: Request) {
@@ -16,18 +19,30 @@ class ShardWrite {
         let partition = request.payload.partition
         let table = request.payload.table
         let values = request.payload.values
+        let keyspacetable = "\(keyspace)-\(table)"
         
         let shard = Shards.getShard(keyspace: keyspace, partition: partition)
         
         // now build the write query, after determining if the record is an update to an existing one or not.
         
         // first off, find the name of the primary key for this table
-        let table_struct = shard.read(sql: "PRAGMA table_info(\(table))", params: [])
+        let fpk: String? = pkCache[keyspacetable]
         var pk = ""
-        for s in table_struct.results {
-            if s["pk"]?.asInt() == 1 {
-                pk = (s["name"]?.asString())!
+        
+        if fpk != nil {
+            
+            pk = fpk!
+            
+        } else {
+            
+            let table_struct = shard.read(sql: "PRAGMA table_info(\(table))", params: [])
+            for s in table_struct.results {
+                if s["pk"]?.asInt() == 1 {
+                    pk = (s["name"]?.asString())!
+                    pkCache[keyspacetable] = pk
+                }
             }
+            
         }
         
         if values.keys.contains(pk) {

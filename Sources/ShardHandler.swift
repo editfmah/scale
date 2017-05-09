@@ -17,6 +17,8 @@ class ShardHandler {
             _ = ShardRead(request)
         case .Write:
             _ = ShardWrite(request)
+        case .Delete:
+            _ = ShardDelete(request)
         default:
             request.setError("Unknown command for Keyspace request")
         }

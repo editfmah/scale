@@ -9,6 +9,9 @@
 import Foundation
 import SWSQLite
 
+//var keyspaceCache: [String:Keyspace] = [:]
+//let lock = Mutex()
+
 class Keyspace : DataObject {
     
     // object vars
@@ -37,7 +40,8 @@ class Keyspace : DataObject {
             Action(addColumn: "name", type: .String, table: "Keyspace"),
             Action(addColumn: "replication", type: .Int, table: "Keyspace"),
             Action(addColumn: "size", type: .Int, table: "Keyspace"),
-            Action(addColumn: "template", type: .String, table: "Keyspace")
+            Action(addColumn: "template", type: .String, table: "Keyspace"),
+            Action(createIndexOnTable: "Keyspace", keyColumnName: "name", ascending: true)
         ]
         
         actions.append(contentsOf: KeyspaceSchema.GetTables())
@@ -47,7 +51,7 @@ class Keyspace : DataObject {
     
     // data manipulation and creation functions
     class func Create(_ keyspace: String, replication: Int, template: String?) -> String {
-        let sys = Shards.systemShard()
+
         var sysKeyspaces: [Keyspace] = []
         for record in sys.read(sql: "SELECT * FROM Keyspace WHERE name = ? LIMIT 1", params: [keyspace]).results {
             let k = Keyspace(record)
@@ -77,7 +81,7 @@ class Keyspace : DataObject {
     }
     
     class func Exists(_ keyspace: String) -> Bool {
-        let sys = Shards.systemShard()
+
         let count = sys.read(sql: "SELECT NULL FROM Keyspace WHERE name = ?", params: [keyspace])
         if count.results.count > 0 {
             return true
@@ -87,11 +91,22 @@ class Keyspace : DataObject {
     }
     
     class func Get(_ keyspace: String) -> Keyspace? {
-        let sys = Shards.systemShard()
-        let k = sys.read(sql: "SELECT * FROM Keyspace WHERE name = ?", params: [keyspace])
+
+//        var foundKeyspace: Keyspace? = nil
+//        lock.mutex {
+//            foundKeyspace = keyspaceCache[keyspace]
+//        }
+//        if foundKeyspace != nil {
+//            return foundKeyspace
+//        }
+        
+        let k = sys.read(sql: "SELECT * FROM Keyspace WHERE name = ? LIMIT 1", params: [keyspace])
         if k.results.count > 0 {
             for record in k.results {
                 let key = Keyspace(record)
+//                lock.mutex {
+//                    keyspaceCache[keyspace] = key
+//                }
                 return key
             }
         }
