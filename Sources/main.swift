@@ -5,7 +5,7 @@ import KituraNet
 import SwiftyJSON
 import SWSQLite
 
-let version = 0.00
+let version = 0.01
 
 // get the path of the executable as all files are defined from here
 let executablePath = FileManager.default.currentDirectoryPath
@@ -32,6 +32,7 @@ router.route("/").get("/") {
     
         response.send("SharkScale Database Engine v\(version)\n")
         response.send("Node: \(nodeSettings.nodeId)\n")
+        response.send("Name: \(nodeSettings.peerName)\n")
         response.send("Server time: \(Date())")
         next()
 
@@ -39,7 +40,7 @@ router.route("/").get("/") {
 
 router.route("/").post {
     (request: RouterRequest,  response: RouterResponse, next) in
-
+    
     let body = try request.readString() ?? ""
     let json = JSON(data: body.data(using: .utf8, allowLossyConversion: false)!)
     
@@ -48,10 +49,12 @@ router.route("/").post {
         
         let requests = json.array
         var responses : [JSON] = []
+
         if requests != nil && (requests?.count)! > 0 {
             for jsonRequest in requests! {
                 
                 // create a request object
+                
                 let reqObj = Request(jsonRequest)
                 let handler = RequestCoordinator()
                 handler.HandleRequest(reqObj)
@@ -59,6 +62,7 @@ router.route("/").post {
                 
             }
         }
+        
         
         let responseArray = JSON(responses)
         response.send(json: responseArray)
@@ -73,6 +77,7 @@ router.route("/").post {
         
     }
     
+   
     
     next()
     

@@ -1,0 +1,23 @@
+{
+    "node" : {
+        "name" : "Shark Scale Node",
+        "id" : "13c6b89b-2ab5-44f5-bf00-bb018c828397",
+        "cluster" : "13c6b89b-2ab5-44f5-bf00-bb018c828397",
+        "location" : "default",
+        "peers" : [],
+        "max_open_shards" : 512,
+        "peering_port" : 9000
+    },
+    "roles" : {
+        "store" : {
+            "enabled" : true,
+            "location" : null
+            "port" : 8080
+        },
+        "backup" : {
+            "enabled" : true,
+            "location" : null,
+            "port" : 8081
+        }
+    }
+}

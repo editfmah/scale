@@ -25,6 +25,7 @@ class Shard : DataObject, DataObjectProtocol {
     var lastTouched: Date = Date()
     var referenceCount: Int = 0
     var db: SWSQLite!
+    var mem: SWSQLite!
     var lock :Mutex!
     var dirty: Bool = true
     
