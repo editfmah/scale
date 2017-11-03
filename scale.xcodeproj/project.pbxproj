@@ -2061,7 +2061,7 @@
 		"PerfectThread::PerfectThread::Product" /* PerfectThread.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectThread.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"SWSQLite::SWSQLite::Product" /* SWSQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SWSQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"SwiftyJSON::SwiftyJSON::Product" /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"scale::scale::Product" /* scale */ = {isa = PBXFileReference; lastKnownFileType = text; path = scale; sourceTree = BUILT_PRODUCTS_DIR; };
+		"scale::scale::Product" /* scale */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = scale; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3003,7 +3003,7 @@
 			path = include;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -3012,7 +3012,6 @@
 				OBJ_39 /* Dependencies */,
 				OBJ_902 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_52 /* PerfectHTTPServer */ = {
@@ -3754,6 +3753,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 9999;
+				TargetAttributes = {
+					"scale::scale" = {
+						LastSwiftMigration = 0910;
+					};
+				};
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "scale" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -3762,7 +3766,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_902 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -5892,7 +5896,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -fmodule-map-file=$(SRCROOT)/.build/checkouts/Perfect-HTTPServer.git--6671958091389663080/Sources/PerfectCHTTPParser/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/.build/checkouts/Perfect-CZlib-src.git--8503750424862953877/PerfectCZlib/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/.build/checkouts/Perfect-COpenSSL.git--4744624199947727386/COpenSSL/include/module.modulemap";
 				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
 				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TARGET_NAME = scale;
 			};
 			name = Debug;
@@ -5917,7 +5922,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -fmodule-map-file=$(SRCROOT)/.build/checkouts/Perfect-HTTPServer.git--6671958091389663080/Sources/PerfectCHTTPParser/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/.build/checkouts/Perfect-CZlib-src.git--8503750424862953877/PerfectCZlib/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/.build/checkouts/Perfect-COpenSSL.git--4744624199947727386/COpenSSL/include/module.modulemap";
 				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
 				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TARGET_NAME = scale;
 			};
 			name = Release;
