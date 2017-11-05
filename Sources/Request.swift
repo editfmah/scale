@@ -31,45 +31,58 @@ enum RequestError: String {
 class Request {
     
     // request/response data
-    private var request: JSON = JSON(nilLiteral: ())
+    private var request: JSON
     var response: JSON = JSON(dictionaryLiteral: ("error",NSNull()), ("message", NSNull()), ("type" , NSNull()), ("payload", NSNull()),("requestId", NSNull()))
     
     // packet contents
-    var user: String = ""
-    var password: String = ""
-    var token: String = ""
-    var type: RequestType = .Unset
-    var payload: Payload = Payload(JSON(nilLiteral: ()))
+    private var pUser: String?
+    private var pPassword: String?
+    private var pToken: String?
+    private var pType: RequestType = .Unset
+    private var pPayload: Payload?
     
     init(_ json: JSON) {
         
         self.request = json
         
-        if self.request["type"].stringValue == "keyspace" {
-            type = .Keyspace
-        } else if self.request["type"].stringValue == "client_write" {
-            type = .Write
-        } else if self.request["type"].stringValue == "client_read" {
-            type = .Read
-        } else if self.request["type"].stringValue == "read" {
-            type = .Read
-        } else if self.request["type"].stringValue == "write" {
-            type = .Write
-        } else if self.request["type"].stringValue == "system" {
-            type = .System
-        } else if self.request["type"].stringValue == "delete" {
-            type = .Delete
-        }
-        
-        if self.request["payload"].exists() {
-            self.payload = Payload(self.request["payload"])
-        }
-        
-        self.response["requestId"] = JSON(uuid())
         if self.request["requestId"].exists() {
             self.response["requestId"] = self.request["requestId"]
+        } else {
+            self.response["requestId"] = JSON(uuid())
         }
         
+    }
+    
+    func type() -> RequestType {
+        if pType == .Unset {
+            let type = self.request["type"].stringValue
+            if type  == "keyspace" {
+                pType = .Keyspace
+            } else if type  == "client_write" {
+                pType = .Write
+            } else if type  == "client_read" {
+                pType = .Read
+            } else if type  == "read" {
+                pType = .Read
+            } else if type  == "write" {
+                pType = .Write
+            } else if type  == "system" {
+                pType = .System
+            } else if type  == "delete" {
+                pType = .Delete
+            }
+        }
+        return pType
+    }
+    
+    func payload() -> Payload {
+        if pPayload == nil {
+            pPayload = Payload(self.request["payload"])
+            if pPayload == nil {
+                pPayload = Payload(JSON.null)
+            }
+        }
+        return pPayload!
     }
     
     func setError(_ error: String) {

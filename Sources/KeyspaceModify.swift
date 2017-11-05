@@ -40,7 +40,7 @@ class KeyspaceModify {
         }
         
         // now test the new change to make sure it is a valid change, before inserting it into the schema table
-        let result = db.execute(sql: request.payload.update, params: [])
+        let result = db.execute(sql: request.payload().update, params: [])
         if result.error != nil {
             request.setError("Error modifying keyspace '\(params.keyspace)' : \(result.error!)")
             return
@@ -50,10 +50,10 @@ class KeyspaceModify {
         // add this update into the KeyspaceSchema.
         
         let schema: KeyspaceSchema = KeyspaceSchema()
-        schema.keyspace = request.payload.keyspace
+        schema.keyspace = request.payload().keyspace
         schema.version = timeuuid()
-        schema.change = request.payload.update
-        sys.write(schema.Commit())
+        schema.change = request.payload().update
+        _ = sys.write(schema.Commit())
         
         // now invalidate all open shards for this keyspace
         Shards.invalidateShardsInKeyspace(schema.keyspace!)

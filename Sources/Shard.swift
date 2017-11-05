@@ -49,6 +49,8 @@ class Shard : DataObject, DataObjectProtocol {
         
         FileShardDirectoryCreate()
         db = SWSQLite(path: FileShardPath(keyspace: self.keyspace!, partition: self.partition!))
+        _ = db.execute(sql: "PRAGMA synchronous=NORMAL", params: []);
+        _ = db.execute(sql: "PRAGMA journal_mode=WAL", params: []);
         Open()
         
     }

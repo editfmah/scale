@@ -12,7 +12,7 @@ class ShardHandler {
     
     init(_ request: Request) {
         
-        switch request.type {
+        switch request.type() {
         case .Read:
             _ = ShardRead(request)
         case .Write:

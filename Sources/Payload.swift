@@ -31,81 +31,38 @@ class Payload {
     init(_ json: JSON) {
         
         self.raw = json
+        let data = json.dictionaryObject
         
-        if json["command"].exists() {
-            self.command = json["command"].stringValue
+        self.command = data!["command"] as? String ?? ""
+        self.keyspace = data!["keyspace"] as? String ?? ""
+        self.replication = data!["replication"] as? Int ?? 0
+        
+        if data!["update"] != nil {
+            self.update = data!["update"] as? String ?? ""
+        } else if data!["change"] != nil {
+            self.update = data!["change"] as? String ?? ""
         }
         
-        if json["keyspace"].exists() {
-            self.keyspace = json["keyspace"].stringValue
-        }
+        self.template = data!["template"] as? String ?? ""
+        self.partition = data!["partition"] as? String ?? ""
+        self.table = data!["table"] as? String ?? ""
+        self.values = data!["values"] as? [String:Any] ?? [:]
+        self.whereStmt = data!["where"] as? String ?? "1=1"
+        self.order = data!["order"] as? String ?? "ROWID"
+        self.offset = data!["offset"] as? Int ?? 0
+        self.limit = data!["limit"] as? Int ?? 999999
         
-        if json["replication"].exists() {
-            self.replication = json["replication"].intValue
-        }
-        
-        if json["update"].exists() {
-            self.update = json["update"].stringValue
-        }
-        
-        if json["change"].exists() {
-            self.update = json["change"].stringValue
-        }
-        
-        if json["template"].exists() {
-            self.template = json["template"].stringValue
-        }
-        
-        if json["partition"].exists() {
-            self.partition = json["partition"].stringValue
-        }
-        
-        if json["template"].exists() {
-            self.template = json["template"].stringValue
-        }
-        
-        if json["table"].exists() {
-            self.table = json["table"].stringValue
-        }
-        
-        if json["values"].exists() {
-            if !json["values"].isEmpty {
-                self.values = json["values"].dictionaryObject!
+        if data!["columns"] != nil {
+            columns = []
+            for f in data!["columns"] as! [String] {
+                columns.append(f)
             }
         }
         
-        if json["columns"].exists() {
-            if !json["columns"].isEmpty {
-                columns = []
-                for f in json["columns"].arrayObject! {
-                    let col = f as! String
-                    columns.append(col)
-                }
+        if data!["parameters"] != nil {
+            for p in data!["parameters"] as! [Any] {
+                parameters.append(p)
             }
-        }
-        
-        if json["where"].exists() {
-            self.whereStmt = json["where"].stringValue
-        }
-        
-        if json["parameters"].exists() {
-            if !json["parameters"].isEmpty {
-                for p in json["parameters"].arrayObject! {
-                    parameters.append(p)
-                }
-            }
-        }
-        
-        if json["offset"].exists() {
-            self.offset = json["offset"].intValue
-        }
-        
-        if json["limit"].exists() {
-            self.limit = json["limit"].intValue
-        }
-        
-        if json["order"].exists() {
-            self.order = json["order"].stringValue
         }
         
     }

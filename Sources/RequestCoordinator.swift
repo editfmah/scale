@@ -12,7 +12,7 @@ class RequestCoordinator {
     
     func HandleRequest(_ request: Request) {
         
-        switch request.type {
+        switch request.type() {
         case .Keyspace:
             _ = KeyspaceHandler(request)
         case .Read:

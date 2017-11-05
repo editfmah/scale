@@ -26,7 +26,7 @@ class KeyspaceHandler {
     
     class func keyspaceParamsFromRequest(_ request: Request) -> KeyspaceParams {
         var p = KeyspaceParams()
-        p.keyspace = request.payload.keyspace
+        p.keyspace = request.payload().keyspace
         return p
     }
     
@@ -34,7 +34,7 @@ class KeyspaceHandler {
         
         params = KeyspaceHandler.keyspaceParamsFromRequest(request)
         
-        switch request.payload.command {
+        switch request.payload().command {
         case "create":
         _ = KeyspaceCreate(request, params: params)
         case "query":

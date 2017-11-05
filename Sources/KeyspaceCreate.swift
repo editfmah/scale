@@ -12,12 +12,12 @@ class KeyspaceCreate {
     
     init(_ request: Request, params: KeyspaceParams) {
         
-        var replication = request.payload.replication
+        var replication = request.payload().replication
         if replication < 1 {
             replication = 1
         }
         
-        let template = request.payload.template
+        let template = request.payload().template
         
         // look to see if this keyspace already exists, if it does throw an error
         if Keyspace.Exists(params.keyspace) {

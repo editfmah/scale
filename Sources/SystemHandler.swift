@@ -12,7 +12,7 @@ class SystemHandler {
     
     init(_ request: Request) {
         
-        switch request.payload.command {
+        switch request.payload().command {
         case "echo":
             _ = SystemEcho(request)
         default:

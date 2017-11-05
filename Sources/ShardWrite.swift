@@ -15,13 +15,11 @@ class ShardWrite {
     
     init(_ request: Request) {
     
-        let keyspace = request.payload.keyspace
-        let partition = request.payload.partition
-        let table = request.payload.table
-        let values = request.payload.values
-        let keyspacetable = "\(keyspace)-\(table)"
-        
-        let shard = Shards.getShard(keyspace: keyspace, partition: partition)
+        let payload = request.payload()
+        let shard = Shards.getShard(keyspace: payload.keyspace, partition: payload.partition)
+        let table = payload.table
+        let values = payload.values
+        let keyspacetable = "\(payload.keyspace)-\(table)"
         
         // now build the write query, after determining if the record is an update to an existing one or not.
         
@@ -40,6 +38,7 @@ class ShardWrite {
                 if s["pk"]?.asInt() == 1 {
                     pk = (s["name"]?.asString())!
                     pkCache[keyspacetable] = pk
+                    break
                 }
             }
             
